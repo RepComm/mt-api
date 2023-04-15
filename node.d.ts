@@ -100,34 +100,50 @@ export interface MtLBMDef {
   action: MtLBMAction;
 }
 
-export type MtNodeDrawtype =
-  "normal" |
-  "airlike" |
-  "liquid" |
-  "flowingliquid" |
-  "glasslike" |
-  "glasslike_framed" |
-  "glasslike_framed_optional" |
-  "allfaces" |
-  "allfaces_optional" |
-  "torchlike" |
-  "signlike" |
-  "plantlike" |
-  "firelike" |
-  "fencelike" |
-  "raillike" |
-  "nodebox" |
-  "mesh";
+export type MtTileDef = string;
 
-  export type MtTileDef = string;
+export type MtNodeParamType = "none" | "light";
 
-  export type MtNodeParamType = "none" | "light";
+export type MtNodeLiquidType = "none" | "source" | "flowing";
 
-  export type MtNodeLiquidType = "none" | "source" | "flowing";
+export type MtNodeBoxType = "regular" | "leveled" | "fixed" | "wallmounted" | "connected";
 
-  export type MtNodeBoxType = "regular" | "leveled";
-  export interface MtNodeBox {
-  type: MtNodeBoxType; //TODO - finish
+export type MtNodeBoxData = Array<number>;
+export type MtNodeBoxesData = MtNodeBoxData|Array<MtNodeBoxData>;
+
+export interface MtNodeBoxTypeMap {
+  regular: MtNodeBoxRegular;
+  leveled: MtNodeBoxLeveled;
+  fixed: MtNodeBoxFixed;
+  wallmounted: MtNodeBoxWallMounted;
+  connected: MtNodeBoxConnected;
+}
+
+export interface MtNodeBox<T extends keyof MtNodeBoxTypeMap> {
+  type: T; //TODO - finish
+}
+export interface MtNodeBoxRegular extends MtNodeBox<"regular"> {
+  //TODO - lua_api not clear on this
+}
+/**TODO - lua_api not clear on this at all*/
+export interface MtNodeBoxLeveled extends MtNodeBox<"leveled"> {
+}
+export interface MtNodeBoxFixed extends MtNodeBox<"fixed"> {
+  fixed: MtNodeBoxesData;
+}
+export interface MtNodeBoxWallMounted extends MtNodeBox<"wallmounted"> {
+  wall_top: MtNodeBoxData;
+  wall_bottom: MtNodeBoxData;
+  wall_side: MtNodeBoxData;
+}
+export interface MtNodeBoxConnected extends MtNodeBox<"connected"> {
+  fixed: MtNodeBoxesData;
+  connected_top: MtNodeBoxesData;
+  connected_bottom: MtNodeBoxesData;
+  connected_front: MtNodeBoxesData;
+  connected_left: MtNodeBoxesData;
+  connected_back: MtNodeBoxesData;
+  connected_right: MtNodeBoxesData;
 }
 
 export type MtNodeSide = "top" | "bottom" | "front" | "left" | "back" | "right";
@@ -229,8 +245,27 @@ export interface MtNodeDropDef {
   }>
 }
 
-export interface MtNodeDef extends MtItemDef {
-  drawtype: MtNodeDrawtype;
+export type MtNodeDrawtype =
+  "normal" |
+  "airlike" |
+  "liquid" |
+  "flowingliquid" |
+  "glasslike" |
+  "glasslike_framed" |
+  "glasslike_framed_optional" |
+  "allfaces" |
+  "allfaces_optional" |
+  "torchlike" |
+  "signlike" |
+  "plantlike" |
+  "firelike" |
+  "fencelike" |
+  "raillike" |
+  "nodebox" |
+  "mesh";
+
+export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef {
+  drawtype?: MtNodeDrawtype;
   /**
    * Supported for drawtypes "plantlike", "signlike", "torchlike",
    * "firelike", "mesh".
@@ -238,11 +273,11 @@ export interface MtNodeDef extends MtItemDef {
    * node, for the other drawtypes the image will be centered on the node.
    * Note that positioning for "torchlike" may still change. ]]
    */
-  visual_scale: number;
+  visual_scale?: number;
   /**Textures of node; +Y, -Y, +X, -X, +Z, -Z
    * List can be shortened to needed length
   */
-  tiles: Array<MtTileDef>;
+  tiles?: Array<MtTileDef>;
   /**
    * Same as `tiles`, but these textures are drawn on top of the
    * base tiles.You can use this to colorize only specific parts of
@@ -250,22 +285,22 @@ export interface MtNodeDef extends MtItemDef {
    * overlay is not drawn.Since such tiles are drawn twice, it
    * is not recommended to use overlays on very common nodes.
    */
-  overlay_tiles: Array<MtTileDef>;
+  overlay_tiles?: Array<MtTileDef>;
 
   /**
    * Special textures of node; used rarely(old field name: special_materials)
    * List can be shortened to needed length
    */
-  special_tiles: Array<MtTileDef>;
+  special_tiles?: Array<MtTileDef>;
   /**
    * The node's original color will be multiplied with this color.
    * If the node has a palette, then this setting only has an effect
    * in the inventory and on the wield item. ]]
    */
-  color: MtColorSpec;
+  color?: MtColorSpec;
 
   /**Use texture's alpha channel*/
-  use_texture_alpha: boolean;
+  use_texture_alpha?: boolean;
   /**
    * The node's `param2` is used to select a pixel from the image
    * (pixels are arranged from left to right and from top to bottom).
@@ -273,108 +308,108 @@ export interface MtNodeDef extends MtItemDef {
    * color.Tiles can override this behavior.
    * Only when`paramtype2` supports palettes. ]]
    */
-  palette: string;
+  palette?: string;
 
   /**
    * If player is inside node, see "ColorSpec"
    * "green#0F"
    */
-  post_effect_color: MtColorSpec;
+  post_effect_color?: MtColorSpec;
 
   /** paramtype = "light" allows light to propagate from or through the node with light value
    * falling by 1 per node.This line is essential for a light source node to spread its light
    */
-  paramtype: MtNodeParamType;
-  paramtype2: MtNodeParamType;
+  paramtype?: MtNodeParamType;
+  paramtype2?: MtNodeParamType;
 
   /**Force value for param2 when player places node*/
-  place_param2: boolean;
+  place_param2?: boolean;
 
   /**If false, the cave generator will not carve through this*/
-  is_ground_content: boolean;
+  is_ground_content?: boolean;
 
   /**If true, sunlight will go infinitely through this*/
-  sunlight_propagates: boolean;
+  sunlight_propagates?: boolean;
 
   /**If true, objects collide with node*/
-  walkable: boolean;
+  walkable?: boolean;
 
   /**If true, can be pointed at*/
-  pointable: boolean;
+  pointable?: boolean;
 
   /**If false, can never be dug*/
-  diggable: boolean;
+  diggable?: boolean;
 
   /**If true, can be climbed on(ladder)*/
-  climbable: boolean;
+  climbable?: boolean;
 
   /**If true, placed nodes can replace this node*/
-  buildable_to: boolean;
+  buildable_to?: boolean;
 
   /**If true, liquids flow into and replace this node*/
-  floodable: boolean;
+  floodable?: boolean;
 
-  liquidtype: MtNodeLiquidType;
+  liquidtype?: MtNodeLiquidType;
 
   /**Flowing version of source liquid*/
-  liquid_alternative_flowing: string;
+  liquid_alternative_flowing?: string;
 
   /**Source version of flowing liquid*/
-  liquid_alternative_source: string;
+  liquid_alternative_source?: string;
 
   /**Higher viscosity = slower flow(max. 7)*/
-  liquid_viscosity: number;
+  liquid_viscosity?: number;
 
   /**If true, a new liquid source can be created by placing two or more sources nearby*/
-  liquid_renewable: boolean;
+  liquid_renewable?: boolean;
 
   /**
    * Block contains level in param2.Value is default level, used for snow.
    * Don't forget to use "leveled" type nodebox
    */
-  leveled: number;
+  leveled?: number;
 
   /**number of flowing nodes around source(max. 8)*/
-  liquid_range: number;
+  liquid_range?: number;
 
   /**Player will take this amount of damage if no bubbles are left*/
-  drowning: number;
+  drowning?: number;
   /**
    * Amount of light emitted by node.
    * To set the maximum(currently 14), use the value 'minetest.LIGHT_MAX'.
    * A value outside the range 0 to minetest.LIGHT_MAX causes undefined behavior
    */
-  light_source: number;
+  light_source?: number;
 
   /**If player is inside node, this damage is caused*/
-  damage_per_second: number;
+  damage_per_second?: number;
 
-  node_box: MtNodeBox;
+  node_box?: MtNodeBoxTypeMap[NodeBoxType];
   /**
    * Used for nodebox nodes with the type == "connected"
    * Specifies to what neighboring nodes connections will be drawn
    * e.g. `{"group:fence", "default:wood"}` or `"default:stone"`
    */
-  connects_to: Array<string>;
+  connects_to?: Array<string>;
 
   /**Tells connected nodebox nodes to connect only to these sides of this node*/
-  connect_sides: MtNodeSides;
+  connect_sides?: MtNodeSides;
 
-  mesh: string;
+  mesh?: string;
 
   /**If drawtype "nodebox" is used and selection_box is nil, then node_box is used*/
-  selection_box: MtNodeBox;
+  selection_box?: MtNodeBoxData;
 
   /**Support maps made in and before January 2012*/
-  legacy_facedir_simple: boolean;
+  legacy_facedir_simple?: boolean;
 
   /**Support maps made in and before January 2012*/
-  legacy_wallmounted: boolean;
+  legacy_wallmounted?: boolean;
 
-  sounds: MtSoundDefs;
+  sounds?: MtSoundDefs;
 
   /**Name of dropped node when dug.Default is the node itself*/
-  drop: string | MtNodeDropDef;
+  drop?: string | MtNodeDropDef;
 
   /**
    * Node constructor; called after adding node
@@ -382,19 +417,19 @@ export interface MtNodeDef extends MtItemDef {
    * Not called for bulk node placement(i.e.schematics and VoxelManip)
    * default: nil
    */
-  on_construct: MtNodeOnConstructCallback;
+  on_construct?: MtNodeOnConstructCallback;
 
   /**Node destructor; called before removing node
    * Not called for bulk node placement(i.e.schematics and VoxelManip)
    * default: nil
    */
-  on_destruct: MtNodeOnDestructCallback;
+  on_destruct?: MtNodeOnDestructCallback;
 
   /**Node destructor; called after removing node
    * Not called for bulk node placement(i.e.schematics and VoxelManip)
    * default: nil
    */
-  after_destruct: MtNodeAfterDestructCallback;
+  after_destruct?: MtNodeAfterDestructCallback;
 
   /**Called when a liquid(newnode) is about to flood oldnode, if
    * it has`floodable = true` in the nodedef.Not called for bulk
@@ -403,91 +438,91 @@ export interface MtNodeDef extends MtItemDef {
    * most likely be called over and over again every liquid update
    * interval.Default: nil
    */
-  on_flood: MtNodeOnFloodCallback;
+  on_flood?: MtNodeOnFloodCallback;
 
   /**Called after constructing node when node was placed using
    * minetest.item_place_node / minetest.place_node
    * If return true no item is taken from itemstack
    * default: nil
    */
-  after_place_node: MtNodeOnPlaceCallback;
+  after_place_node?: MtNodeOnPlaceCallback;
 
   /**oldmetadata is in table format
    * Called after destructing node when node was dug using
    * minetest.node_dig / minetest.dig_node
    * default: nil
    */
-  after_dig_node: MtNodeAfterDigCallback;
+  after_dig_node?: MtNodeAfterDigCallback;
 
   /**returns true if node can be dug, or false if not
    * default: nil
    */
-  can_dig: MtNodeCanDigCallback;
+  can_dig?: MtNodeCanDigCallback;
 
   /**default: minetest.node_punch
    * By default: Calls minetest.register_on_punchnode callbacks
    */
-  on_punch: MtNodeOnPunchCallback;
+  on_punch?: MtNodeOnPunchCallback;
 
   /**default: nil
    * if defined, itemstack will hold clicker's wielded item
    * Shall return the leftover itemstack
    * Note: pointed_thing can be nil, if a mod calls this function
    */
-  on_rightclick: MtNodeOnRightClickCallback;
+  on_rightclick?: MtNodeOnRightClickCallback;
 
   /**default: minetest.node_dig
    * By default: checks privileges, wears out tool and removes node
    */
-  on_dig: MtNodeOnDigCallback;
+  on_dig?: MtNodeOnDigCallback;
 
   /**default: nil
    * called by NodeTimers, see minetest.get_node_timer and NodeTimerRef
    * elapsed is the total time passed since the timer was started
    * return true to run the timer for another cycle with the same timeout value
    */
-  on_timer: MtNodeOnTimerCallback;
+  on_timer?: MtNodeOnTimerCallback;
 
   /**
    * Called when an UI form(e.g.sign text input) returns data
    * default: nil
   */
-  on_receive_fields: MtNodeOnReceiveFields;
+  on_receive_fields?: MtNodeOnReceiveFields;
 
   /**
    * Called when a player wants to move items inside the inventory
    * Return value: number of items allowed to move
    */
-  allow_metadata_inventory_move: MtNodeAllowMetadataInventoryMoveCallback;
+  allow_metadata_inventory_move?: MtNodeAllowMetadataInventoryMoveCallback;
 
   /**
    * Called when a player wants to put something into the inventory
    * Return value: number of items allowed to put
    * Return value: -1: Allow and don't modify item count in inventory
    */
-  allow_metadata_inventory_put: MtNodeAllowMetadataInventoryPutCallback;
+  allow_metadata_inventory_put?: MtNodeAllowMetadataInventoryPutCallback;
 
 
   /**Called when a player wants to take something out of the inventory
    * Return value: number of items allowed to take
    * Return value: -1: Allow and don't modify item count in inventor
    */
-  allow_metadata_inventory_take: MtNodeAllowMetadataInventoryTakeCallback;
+  allow_metadata_inventory_take?: MtNodeAllowMetadataInventoryTakeCallback;
 
-  on_metadata_inventory_move: MtNodeOnMetadataInventoryMove;
+  on_metadata_inventory_move?: MtNodeOnMetadataInventoryMove;
 
-  on_metadata_inventory_put: MtNodeOnMetadataInventoryPut;
+  on_metadata_inventory_put?: MtNodeOnMetadataInventoryPut;
 
   /**
    * Called after the actual action has happened, according to what was allowed.
    * No return value
    */
-  on_metadata_inventory_take: MtNodeOnMetadataInventoryTake;
+  on_metadata_inventory_take?: MtNodeOnMetadataInventoryTake;
 
   /**
    * intensity: 1.0 = mid range of regular TNT
    * If defined, called when an explosion touches the node, instead of
    * removing the node
    */
-  on_blast: MtNodeOnBlast;
+  on_blast?: MtNodeOnBlast;
 }

@@ -1,7 +1,7 @@
 
 import type { MtEntityDef, MtEntityStaticData, MtPointedThing } from "./entity";
 import type { CraftRecipeCommon, CraftRecipeTypeMap, MtItemDef } from "./item";
-import type { MtNode } from "./node";
+import type { MtNode, MtNodeBoxType, MtNodeDef } from "./node";
 import type { MtObjRef } from "./object";
 import type { MtPlayer, MtPlayerJoinCallback, MtPlayerLeaveCallback } from "./player";
 import type { MtVec3 } from "./vector";
@@ -25,7 +25,7 @@ export interface MinetestGlobal {
 
   register_craftitem(this: void, name: string, itemDef: MtItemDef): void;
   register_tool(this: void, name: string, itemDef: MtItemDef): void;
-  register_node(this: void, name: string, itemDef: MtItemDef): void;
+  register_node<NodeBoxType extends MtNodeBoxType>(this: void, name: string, itemDef: MtNodeDef<NodeBoxType>): void;
   register_craft<K extends keyof CraftRecipeTypeMap>(this: void, recipe: CraftRecipeTypeMap[K]): void;
   clear_craft(this: void, recipe: CraftRecipeCommon<any>): void;
 
