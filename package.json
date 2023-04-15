@@ -1,10 +1,11 @@
 {
   "name": "@repcomm/mt-api",
+  
   "version": "1.0.0",
   "description": "minetest typescript definitions",
   "main": "index.js",
   "scripts": {
-    
+    "pub": "npm publish --access public"
   },
   "repository": {
     "type": "git",
