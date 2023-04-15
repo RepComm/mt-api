@@ -1,6 +1,26 @@
 # mt-api
 Type definitions for using the minetest API
 
+## using
+Install dev dependency in your typescript project:
+```
+npm i @repcomm/mt-api --save-dev
+```
+
+And use:
+```
+import type {} from "@repcomm/mt-api";
+```
+
+The module declares the minetest global the same way you'd use it in lua<br/>
+you can also utilize the types it provides in your own code by importing them:
+
+```
+import type { MtVec3 } from "@repcomm/mt-api";
+
+let myVec: MtVec3 = { x: 0, y: 0, z: 0 };
+```
+
 ## implemented
 - minetest global namespace
 ```ts
