@@ -398,7 +398,8 @@ export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef 
   mesh?: string;
 
   /**If drawtype "nodebox" is used and selection_box is nil, then node_box is used*/
-  selection_box?: MtNodeBoxData;
+  selection_box?: MtNodeBoxTypeMap["fixed"]; //TODO - see if more types allowed
+  collision_box?: MtNodeBoxTypeMap["fixed"]; //TODO - see if more types allowed
 
   /**Support maps made in and before January 2012*/
   legacy_facedir_simple?: boolean;

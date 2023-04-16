@@ -13,5 +13,14 @@ minetest.register_node("test", {
       -0.5,-0.5,-0.5,
        0.5, 0.5, 0.5
     ]
+  },
+  
+  collision_box: {
+    type: "fixed",
+    fixed: [-0.5,-0.5,-0.5, 0.5, 0.5, 0.5]
+  },
+  selection_box: {
+    type: "fixed",
+    fixed: [-0.5,-0.5,-0.5, 0.5, 0.5, 0.5]
   }
 });
