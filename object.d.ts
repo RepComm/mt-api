@@ -1,5 +1,6 @@
 
 import type { MtColorSpec } from "./color";
+import { MtInvRef } from "./inventory";
 import type { MtCollisionBox } from "./node";
 import type { MtVec2, MtVec3 } from "./vector";
 
@@ -80,7 +81,8 @@ export interface MtObjRef {
   /**@deprecated: Will be removed in a future version - use .name*/
   get_entity_name(): string;
   get_luaentity(): MtObjRef;
-
+  
+  get_inventory(): MtInvRef;
 }
 
 export interface MtObjProperties {
