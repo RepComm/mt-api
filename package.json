@@ -2,7 +2,7 @@
   "name": "@repcomm/mt-api",
   "main": "./mod.d.ts",
   
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "minetest typescript definitions",
   "scripts": {
     "pub": "npm publish --access public"
