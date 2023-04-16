@@ -4,7 +4,7 @@ import "./mod";
 minetest.register_node("test", {
   description: "test block",
   
-  tiles: ["test.png"],
+  tiles: [{name: "test.png"}],
 
   drawtype: "nodebox",
   node_box: {

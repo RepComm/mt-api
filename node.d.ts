@@ -100,7 +100,42 @@ export interface MtLBMDef {
   action: MtLBMAction;
 }
 
-export type MtTileDef = string;
+export interface MtTileAnimVerticalFramesDef extends MtTileAnimDef<"vertical_frames"> {
+  /**Width of a frame in pixels*/
+  aspect_w: number;
+  /**Height of a frame in pixels*/
+  aspect_h: number;
+  /**Specify full loop length*/
+  length: number;
+}
+export interface MtTileAnimSheet2dDef extends MtTileAnimDef<"sheet_2d"> {
+  /**width in num of frames*/
+  frames_w: number;
+  /**height in num of frames*/
+  frames_h: number;
+  /**length of single frame*/
+  frame_length: number;
+}
+export interface MtTileAnimTypeMap {
+  vertical_frames: MtTileAnimVerticalFramesDef;
+  sheet_2d: MtTileAnimSheet2dDef;
+}
+
+export interface MtTileAnimDef<T extends keyof MtTileAnimTypeMap> {
+  type: T;
+}
+
+export interface MtTileDef<K extends keyof MtTileAnimTypeMap> {
+  /**texture file name*/
+  name: string;
+  animation?: MtTileAnimTypeMap[K];
+  backface_culling?: boolean;
+  tileable_vertical?: boolean;
+  tileable_horizontal?: boolean;
+  color?: MtColorSpec;
+  /**@deprecated: use name instead*/
+  image?: string;
+}
 
 export type MtNodeParamType = "none" | "light";
 export type MtNodeParamType2 = "facedir"; //TODO - see what is allowed
@@ -278,7 +313,7 @@ export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef 
   /**Textures of node; +Y, -Y, +X, -X, +Z, -Z
    * List can be shortened to needed length
   */
-  tiles?: Array<MtTileDef>;
+  tiles?: string[]|MtTileDef<keyof MtTileAnimTypeMap>[];
   /**
    * Same as `tiles`, but these textures are drawn on top of the
    * base tiles.You can use this to colorize only specific parts of
@@ -286,13 +321,13 @@ export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef 
    * overlay is not drawn.Since such tiles are drawn twice, it
    * is not recommended to use overlays on very common nodes.
    */
-  overlay_tiles?: Array<MtTileDef>;
+  overlay_tiles?: string[]|MtTileDef<keyof MtTileAnimTypeMap>[];
 
   /**
    * Special textures of node; used rarely(old field name: special_materials)
    * List can be shortened to needed length
    */
-  special_tiles?: Array<MtTileDef>;
+  special_tiles?: string[]|MtTileDef<keyof MtTileAnimTypeMap>[];
   /**
    * The node's original color will be multiplied with this color.
    * If the node has a palette, then this setting only has an effect
@@ -385,7 +420,7 @@ export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef 
   /**If player is inside node, this damage is caused*/
   damage_per_second?: number;
 
-  node_box?: MtNodeBoxTypeMap[NodeBoxType];
+  node_box?: MtNodeBoxTypeMap[keyof MtNodeBoxTypeMap];
   /**
    * Used for nodebox nodes with the type == "connected"
    * Specifies to what neighboring nodes connections will be drawn
