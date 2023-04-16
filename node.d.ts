@@ -1,7 +1,8 @@
 
 import type { MtColorSpec } from "./color";
 import type { MtPointedThing } from "./entity";
-import type { MtItemDef, MtItemStack } from "./item";
+import { MtInvRef } from "./inventory";
+import type { MetaDataRef, MtItemDef, MtItemStack } from "./item";
 import type { MtPlayer } from "./player";
 import type { MtSoundDefs } from "./sound";
 import type { MtVec3 } from "./vector";
@@ -204,12 +205,12 @@ export interface MtNodeOnPlaceCallback {
   (this: void, pos: MtVec3, placer: MtPlayer | undefined, itemstack: MtItemStack, pointed_thing: MtPointedThing): void;
 }
 
-export interface MtNodeMeta {
-
+export interface MtNodeMetaRef extends MetaDataRef {
+  get_inventory(): MtInvRef;
 }
 
 export interface MtNodeAfterDigCallback {
-  (this: void, pos: MtVec3, oldnode: MtNode, oldmetadata: MtNodeMeta, digger: MtPlayer | undefined): void;
+  (this: void, pos: MtVec3, oldnode: MtNode, oldmetadata: MtNodeMetaRef, digger: MtPlayer | undefined): void;
 }
 
 export interface MtNodeCanDigCallback {

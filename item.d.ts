@@ -1,6 +1,7 @@
 
 import type { MtColorSpec } from "./color";
-import type { AfterUseCallback, MtNodeName, MtNodePlacementPrediction, OnDropCallback, OnPlaceCallback, OnUseCallback } from "./node";
+import { MtInvRef } from "./inventory";
+import type { AfterUseCallback, MtNodeMetaRef, MtNodeName, MtNodePlacementPrediction, OnDropCallback, OnPlaceCallback, OnUseCallback } from "./node";
 import type { MtSoundDefs } from "./sound";
 import type { MtVec3 } from "./vector";
 
@@ -32,9 +33,29 @@ export interface MtItemGroups {
   choppy: number;
 }
 
+export interface MetaDataRef {
+  set_string(k: string, v: string): void;
+  get_string(k: string): string;
+  set_int(k: string, n: number): void;
+  get_int(k: string): number;
+  set_float(k: string, f: number): void;
+  get_float(k: string): number;
+  to_table(): undefined|any;
+  from_table(t: any): void|true;
+  equals(other: MetaDataRef): boolean;
+}
+
+export interface MtItemStackMetaRef extends MetaDataRef {
+
+}
 
 export interface MtItemStack {
   get_name(): string;
+  get_meta(): MtItemStackMetaRef;
+  name: string;
+  count: number;
+  wear: number;
+  metadata: string;
 }
 
 
