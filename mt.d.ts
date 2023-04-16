@@ -3,6 +3,7 @@ import type { MtEntityDef, MtEntityStaticData, MtPointedThing } from "./entity";
 import type { CraftRecipeCommon, CraftRecipeTypeMap, MtItemDef } from "./item";
 import type { MtNode, MtNodeBoxType, MtNodeDef } from "./node";
 import type { MtObjRef } from "./object";
+import { MtParticleDef, MtParticleSpawnerDef } from "./particle";
 import type { MtPlayer, MtPlayerJoinCallback, MtPlayerLeaveCallback } from "./player";
 import type { MtVec3 } from "./vector";
 
@@ -43,6 +44,10 @@ export interface MinetestGlobal {
 
   luaentities: {[key: string]: MtObjRef};
   object_refs: {[key: string]: MtObjRef};
+
+  add_particle (this: void, partDef: MtParticleDef): number;
+  add_particlespawner(this: void, partSpawnDef: MtParticleSpawnerDef): number;
+  delete_particlespawner(id: number, playername?: string): void;
 }
 
 declare global {
