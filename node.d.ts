@@ -103,6 +103,7 @@ export interface MtLBMDef {
 export type MtTileDef = string;
 
 export type MtNodeParamType = "none" | "light";
+export type MtNodeParamType2 = "facedir"; //TODO - see what is allowed
 
 export type MtNodeLiquidType = "none" | "source" | "flowing";
 
@@ -320,7 +321,7 @@ export interface MtNodeDef<NodeBoxType extends MtNodeBoxType> extends MtItemDef 
    * falling by 1 per node.This line is essential for a light source node to spread its light
    */
   paramtype?: MtNodeParamType;
-  paramtype2?: MtNodeParamType;
+  paramtype2?: MtNodeParamType2;
 
   /**Force value for param2 when player places node*/
   place_param2?: boolean;
