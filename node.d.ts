@@ -174,12 +174,12 @@ export interface MtNodeBoxWallMounted extends MtNodeBox<"wallmounted"> {
 }
 export interface MtNodeBoxConnected extends MtNodeBox<"connected"> {
   fixed: MtNodeBoxesData;
-  connected_top: MtNodeBoxesData;
-  connected_bottom: MtNodeBoxesData;
-  connected_front: MtNodeBoxesData;
-  connected_left: MtNodeBoxesData;
-  connected_back: MtNodeBoxesData;
-  connected_right: MtNodeBoxesData;
+  connect_top: MtNodeBoxesData;
+  connect_bottom: MtNodeBoxesData;
+  connect_front: MtNodeBoxesData;
+  connect_left: MtNodeBoxesData;
+  connect_back: MtNodeBoxesData;
+  connect_right: MtNodeBoxesData;
 }
 
 export type MtNodeSide = "top" | "bottom" | "front" | "left" | "back" | "right";
