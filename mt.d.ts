@@ -80,6 +80,7 @@ export interface MinetestGlobal {
   unregister_chatcommand(this: void, name: string): void;
   register_privilege(this: void, name: string, cfg: string|{ description: string; give_to_singleplayer: boolean}): void;
   register_chatcommand(this: void, name: string, cmd: ChatCommandDef): void;
+  get_objects_inside_radius(this: void, pos: MtVec3, radius: number): MtObjRef[];
 }
 
 declare global {
